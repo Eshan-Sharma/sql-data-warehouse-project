@@ -1,3 +1,7 @@
+## Data Architecture
+
+<img width="806" height="511" alt="Data_Architecture" src="https://github.com/user-attachments/assets/11d0933d-8d32-4b4c-ae48-5d69dc6536e5" />
+
 ## 🚀 Project Requirements
 ### Building the Data Warehouse (Data Engineering)
 
