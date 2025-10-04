@@ -45,9 +45,9 @@ SELECT cst_gndr
 FROM bronze.crm_cust_info 
 WHERE cst_gndr != TRIM(cst_gndr);
 
-SELECT cst_material_status 
+SELECT cst_marital_status 
 FROM bronze.crm_cust_info 
-WHERE cst_material_status != TRIM(cst_material_status);
+WHERE cst_marital_status != TRIM(cst_marital_status);
 
 
 -- ==================================================
@@ -57,7 +57,7 @@ SELECT cst_id,
        cst_key, 
        TRIM(cst_firstname) AS cst_firstname, 
        TRIM(cst_lastname)  AS cst_lastname,
-       cst_material_status,
+       cst_marital_status,
        cst_gndr,
        cst_create_date
 FROM (
@@ -79,7 +79,7 @@ FROM (
            cst_key,
            TRIM(cst_firstname) AS cst_firstname, 
            TRIM(cst_lastname)  AS cst_lastname,
-           cst_material_status,
+           cst_marital_status,
            cst_gndr,
            cst_create_date
     FROM (
@@ -96,7 +96,7 @@ SELECT cst_id,
        cst_key,
        TRIM(cst_firstname) AS cst_firstname, 
        TRIM(cst_lastname)  AS cst_lastname,
-       cst_material_status,
+       cst_marital_status,
        CASE 
             WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
             WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
@@ -116,13 +116,13 @@ WHERE flag_last = 1;
 -- Step 6: Standardize Marital Status values
 -- ==================================================
 -- Check distinct marital status values
-SELECT DISTINCT(cst_material_status)
+SELECT DISTINCT(cst_marital_status)
 FROM (
     SELECT cst_id,
            cst_key,
            TRIM(cst_firstname) AS cst_firstname, 
            TRIM(cst_lastname)  AS cst_lastname,
-           cst_material_status,
+           cst_marital_status,
            CASE 
                 WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
                 WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
@@ -144,10 +144,10 @@ SELECT cst_id,
        TRIM(cst_firstname) AS cst_firstname, 
        TRIM(cst_lastname)  AS cst_lastname,
        CASE 
-            WHEN UPPER(TRIM(cst_material_status)) = 'S' THEN 'Single'
-            WHEN UPPER(TRIM(cst_material_status)) = 'M' THEN 'Married' 
+            WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
+            WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married' 
             ELSE 'n/a' 
-       END AS cst_material_status,
+       END AS cst_marital_status,
        CASE 
             WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
             WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
