@@ -1,6 +1,6 @@
 -- =====================================================================
 -- Exploration Script: bronze.erp_cust_az12
--- File: exploration_crm_sales_details.sql
+-- File: exploration_erp_cust_az12.sql
 -- Purpose: Step-by-step data quality checks and transformations 
 --          leading to the final cleaned dataset for Silver layer
 -- =====================================================================
