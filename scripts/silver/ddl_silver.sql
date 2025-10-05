@@ -31,9 +31,9 @@ CREATE TABLE silver.crm_sales_details(
   sls_ord_num  VARCHAR(50),  -- order number
   sls_prd_key  VARCHAR(50),  -- product key
   sls_cust_id  INT,          -- customer ID
-  sls_order_dt INT,          -- order date
-  sls_ship_dt  INT,          -- ship date
-  sls_due_dt   INT,          -- due date
+  sls_order_dt DATE,          -- order date
+  sls_ship_dt  DATE,          -- ship date
+  sls_due_dt   DATE,          -- due date
   sls_sales    INT,          -- sales amount
   sls_quantity INT,          -- quantity
   sls_price    INT           -- price
