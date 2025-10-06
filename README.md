@@ -48,6 +48,14 @@ The data architecture for this project follows a Medallion Architecture **Bronze
    
    <img width="806" height="511" alt="Data_Architecture" src="https://github.com/user-attachments/assets/11d0933d-8d32-4b4c-ae48-5d69dc6536e5" />
 
+## 🔧 Tech Stack
+
+- Databricks (SQL)
+- Fivetran Google Drive Connector (data ingestion)
+- Delta Lake (storage & transformations)
+- Agile Project Tracking in Notion
+- GitHub for documentation & versioning
+
 ## 🚀 Project Requirements
 
 ### Building the Data Warehouse (Data Engineering)
