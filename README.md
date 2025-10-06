@@ -7,38 +7,36 @@ This project showcases a comprehensive **data warehousing and analytics solution
 ## 🏗️ Procedure Followed
 
 1. Requirement Analysis & Planning
-
-- Defined business goals (analyzing customers, products, and sales trends).
-- Outlined deliverables and structured the project using Agile methodology.
+   - Defined business goals (analyzing customers, products, and sales trends).
+   - Outlined deliverables and structured the project using Agile methodology.
 
 2. Data Exploration
 
-- Performed deep profiling on CRM and ERP datasets.
-- Identified data quality issues (missing values, inconsistent categories, surrogate key needs).
-- Documented findings in `docs/data_catalog.md`.
+   - Performed deep profiling on CRM and ERP datasets.   
+   - Identified data quality issues (missing values, inconsistent categories, surrogate key needs).
+   - Documented findings in `docs/data_catalog.md`.
 
 3. Data Modeling
 
-- Designed a **Medallion Architecture (Bronze → Silver → Gold)**.
-- Created a Star Schema with `dim_customers`, `dim_products`, and `fact_sales`.
-
-- Captured architecture, flow, and models in diagrams (`docs/`).
+   - Designed a **Medallion Architecture (Bronze → Silver → Gold)**.
+   - Created a Star Schema with `dim_customers`, `dim_products`, and `fact_sales`.
+   - Captured architecture, flow, and models in diagrams (`docs/`).
 
 4. ETL Implementation
 
-- Bronze: Raw ingestion from CSV files.
-- Silver: Standardization, cleansing, and integration of ERP & CRM sources.
-- Gold: Business-ready star schema for analytics, with integrity checks.
+   - Bronze: Raw ingestion from CSV files.
+   - Silver: Standardization, cleansing, and integration of ERP & CRM sources.
+   - Gold: Business-ready star schema for analytics, with integrity checks.
 
 5. Analytics & Reporting
 
-- SQL-based insights into **Customer behavior**, **Product performance**, and **Sales trends**.
-- Ensured **referential integrity** with foreign key checks.
+   - SQL-based insights into **Customer behavior**, **Product performance**, and **Sales trends**.
+   - Ensured **referential integrity** with foreign key checks.
 
 6. Documentation
 
-- Maintained **data catalog**, **naming conventions**, and **data models** for clarity.
-- Structured repository for easy navigation and reuse.
+   - Maintained **data catalog**, **naming conventions**, and **data models** for clarity.
+   - Structured repository for easy navigation and reuse.
 
 ## 📖 Data Architecture
 
@@ -47,6 +45,7 @@ The data architecture for this project follows a Medallion Architecture **Bronze
 1. Bronze Layer: Stores raw data as-is from the source systems. Data is ingested from CSV Files into the Databricks Database.
 2. Silver Layer: This layer includes data cleansing, standardisation, and normalisation processes to prepare data for analysis.
 3. Gold Layer: Houses business-ready data modelled into a star schema required for reporting and analytics.
+   
    <img width="806" height="511" alt="Data_Architecture" src="https://github.com/user-attachments/assets/11d0933d-8d32-4b4c-ae48-5d69dc6536e5" />
 
 ## 🚀 Project Requirements
@@ -119,6 +118,7 @@ data-warehouse-project/
 │   │   └── proc_load_silver.sql        # Procedures to transform Bronze → Silver
 │   │
 │   └── gold/                           # Business-ready analytics layer (Gold)
+|       ├── data_analysis.sql           # Exploratory data analysis(EDA) and Advanced data analysis for business insights
 │       ├── exploration_customer.sql    # Dimension build / validation for customers
 │       ├── exploration_product.sql     # Dimension build / validation for products
 │       ├── exploration_sales.sql       # Fact build / validation for sales
