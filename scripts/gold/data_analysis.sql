@@ -306,3 +306,73 @@ WHERE order_date IS NOT NULL
 GROUP BY YEAR(order_date), MONTH(order_date)
 ORDER BY YEAR(order_date), MONTH(order_date);
 
+-- ============================================================
+-- 8. Cumulative Analysis
+-- ============================================================
+-- Calculate total monthly sales and the running total of sales over time.
+
+-- Total sales per month
+SELECT 
+    SUM(sales_amount) AS total_sales,
+    MONTH(order_date) AS monthly 
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY MONTH(order_date);
+
+-- Running total of sales over time (monthly)
+SELECT 
+    monthly, 
+    total_sales, 
+    SUM(total_sales) OVER(ORDER BY monthly) AS running_total_sales
+FROM (
+    SELECT 
+        SUM(sales_amount) AS total_sales,
+        MONTH(order_date) AS monthly 
+    FROM gold.fact_sales
+    WHERE order_date IS NOT NULL
+    GROUP BY MONTH(order_date)
+);
+
+-- Running total of sales per year
+SELECT 
+    monthly, 
+    total_sales, 
+    SUM(total_sales) OVER(PARTITION BY monthly ORDER BY monthly) AS running_total_sales
+FROM (
+    SELECT 
+        SUM(sales_amount) AS total_sales,
+        DATE_TRUNC('month', order_date) AS monthly 
+    FROM gold.fact_sales
+    WHERE order_date IS NOT NULL
+    GROUP BY DATE_TRUNC('month', order_date)
+);
+
+-- Running total of yearly sales
+SELECT 
+    monthly, 
+    total_sales, 
+    SUM(total_sales) OVER(ORDER BY monthly) AS running_total_sales
+FROM (
+    SELECT 
+        SUM(sales_amount) AS total_sales,
+        DATE_TRUNC('year', order_date) AS monthly 
+    FROM gold.fact_sales
+    WHERE order_date IS NOT NULL
+    GROUP BY DATE_TRUNC('year', order_date)
+);
+
+-- Moving average of yearly sales
+SELECT 
+    monthly, 
+    total_sales, 
+    SUM(total_sales) OVER(ORDER BY monthly) AS running_total_sales,
+    AVG(avg_price) OVER(ORDER BY monthly) AS moving_average
+FROM (
+    SELECT 
+        SUM(sales_amount) AS total_sales,
+        AVG(price) AS avg_price,
+        DATE_TRUNC('year', order_date) AS monthly 
+    FROM gold.fact_sales
+    WHERE order_date IS NOT NULL
+    GROUP BY DATE_TRUNC('year', order_date)
+);
