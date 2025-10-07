@@ -234,4 +234,75 @@ LEFT JOIN datawarehouse.gold.dim_customers dc
 GROUP BY dc.customer_key 
 ORDER BY total_orders ASC 
 LIMIT 3;
+
 -- ============================================================
+-- Advance Analytics
+-- ============================================================
+-- Sections:
+-- 7. Change Over Time Analysis
+-- 8. Cumulative Analysis
+-- 9. Performance Analysis
+-- 10. Part to whole (Proportion) Analysis
+-- 11. Data Segmentation
+-- 12. Reporting
+-- ============================================================
+
+-- ============================================================
+-- 7. Change Over Time Analysis
+-- ============================================================
+-- Analyse Sales performance over time
+
+-- Yearly total sales
+SELECT 
+    YEAR(order_date) AS order_year, 
+    SUM(sales_amount) AS total_sales 
+FROM gold.fact_sales 
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date)
+ORDER BY YEAR(order_date);
+
+-- Yearly total sales and total customers
+SELECT 
+    YEAR(order_date) AS order_year, 
+    SUM(sales_amount) AS total_sales, 
+    COUNT(DISTINCT customer_key) AS total_customers 
+FROM gold.fact_sales 
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date)
+ORDER BY YEAR(order_date);
+
+-- Yearly total sales, total customers, and total quantity sold
+SELECT 
+    YEAR(order_date) AS order_year, 
+    SUM(sales_amount) AS total_sales, 
+    COUNT(DISTINCT customer_key) AS total_customers, 
+    SUM(quantity) AS total_quantity 
+FROM gold.fact_sales 
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date)
+ORDER BY YEAR(order_date);
+
+
+-- Discover seasonality trends by month
+SELECT 
+    MONTH(order_date) AS order_month, 
+    SUM(sales_amount) AS total_sales, 
+    COUNT(DISTINCT customer_key) AS total_customers, 
+    SUM(quantity) AS total_quantity 
+FROM gold.fact_sales 
+WHERE order_date IS NOT NULL
+GROUP BY MONTH(order_date)
+ORDER BY MONTH(order_date);
+
+-- Yearly and monthly breakdown of sales
+SELECT 
+    YEAR(order_date) AS order_year,
+    MONTH(order_date) AS order_month, 
+    SUM(sales_amount) AS total_sales, 
+    COUNT(DISTINCT customer_key) AS total_customers, 
+    SUM(quantity) AS total_quantity 
+FROM gold.fact_sales 
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date), MONTH(order_date)
+ORDER BY YEAR(order_date), MONTH(order_date);
+
