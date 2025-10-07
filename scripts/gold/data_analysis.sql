@@ -520,3 +520,68 @@ SELECT
     END AS sales_status_previous_year
 FROM yearly_product_sales
 ORDER BY product_name, order_year;
+
+-- ============================================================
+-- 10. Part-to-Whole (Proportion) Analysis
+-- ============================================================
+-- Identify which product categories contribute most to total sales.
+
+-- Total sales by category
+SELECT 
+    category, 
+    SUM(sales_amount) AS total_sales
+FROM gold.fact_sales f
+LEFT JOIN gold.dim_products p 
+    ON f.product_key = p.product_key
+GROUP BY category;
+
+-- Overall sales (total across all categories)
+WITH category_sales AS (
+    SELECT 
+        category, 
+        SUM(sales_amount) AS total_sales
+    FROM gold.fact_sales f
+    LEFT JOIN gold.dim_products p 
+        ON f.product_key = p.product_key
+    GROUP BY category
+)
+SELECT 
+    category, 
+    total_sales,
+    SUM(total_sales) OVER() AS overall_sales 
+FROM category_sales;
+
+-- Proportion of each category relative to total sales
+WITH category_sales AS (
+    SELECT 
+        category, 
+        SUM(sales_amount) AS total_sales
+    FROM gold.fact_sales f
+    LEFT JOIN gold.dim_products p 
+        ON f.product_key = p.product_key
+    GROUP BY category
+)
+SELECT 
+    category, 
+    total_sales,
+    SUM(total_sales) OVER() AS overall_sales,
+    ROUND((total_sales / SUM(total_sales) OVER()) * 100, 2) AS sales_percentage
+FROM category_sales;
+
+-- Formatted and ordered version
+WITH category_sales AS (
+    SELECT 
+        category, 
+        SUM(sales_amount) AS total_sales
+    FROM gold.fact_sales f
+    LEFT JOIN gold.dim_products p 
+        ON f.product_key = p.product_key
+    GROUP BY category
+)
+SELECT 
+    category, 
+    total_sales,
+    SUM(total_sales) OVER() AS overall_sales,
+    CONCAT(ROUND((total_sales / SUM(total_sales) OVER()) * 100, 2), '%') AS sales_percentage
+FROM category_sales
+ORDER BY total_sales DESC;
