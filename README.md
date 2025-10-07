@@ -1,6 +1,6 @@
-# Data Warehouse and Analytics Project
+# Data Warehouse and Analytics Project (Portfolio)
 
-This project showcases a comprehensive **data warehousing and analytics solution**, spanning from raw data ingestion to analytical insights.Designed as a portfolio project to demonstrate end-to-end data engineering skills with a strong focus on **exploration**, **modeling**, and **integration**.
+End-to-end data warehousing and analytics project demonstrating ingestion, transformation, dimensional modelling, integrity checks, and rich SQL-based insights. Built on a Medallion Architecture: `Bronze → Silver → Gold`.
 
 👉 I also mimicked a real-world Agile/Jira-style project management workflow in [Notion](https://wandering-engineer-849.notion.site/Data-Warehouse-Project-1cfb006f747f80db8f4edc4331512eca)
 
@@ -37,6 +37,13 @@ This project showcases a comprehensive **data warehousing and analytics solution
 
    - Maintained **data catalog**, **naming conventions**, and **data models** for clarity.
    - Structured repository for easy navigation and reuse.
+  
+### Highlights
+- **Medallion Architecture** with clear separation of concerns
+- **Data Quality & Standardization** rules applied at the Silver layer
+- **Dimensional Modeling**: `gold.dim_customers`, `gold.dim_products`, `gold.fact_sales`
+- **Analytical Views/Reports**: customer and product KPI views, trend and segmentation analyses
+- **Comprehensive SQL Techniques**: window functions, CTEs, conditional logic, date handling, integrity checks
 
 ## 📖 Data Architecture
 
@@ -135,3 +142,61 @@ data-warehouse-project/
 │
 ├── README.md                           # Project overview, setup, and usage instructions
 ```
+## How to Run (Quickstart)
+1. Initialize catalog and schemas
+   - Execute `scripts/init_database.sql`
+2. Create Bronze and Silver tables
+   - Run `scripts/bronze/ddl_bronze.sql` and `scripts/silver/ddl_silver.sql`
+3. Load Bronze from sources
+   - Run `scripts/bronze/proc_load_bronze.sql` (ingests from Google Drive landing tables)
+4. Transform Bronze → Silver
+   - Run `scripts/silver/proc_load_silver.sql` (cleansing, standardization, deduplication)
+5. Build Gold dimensional and report views
+   - Run `scripts/gold/proc_load_gold.sql`
+6. Validate referential integrity
+   - Run `scripts/gold/integrity_check_gold.sql`
+7. Explore analytics
+   - Run `scripts/gold/data_analysis.sql` for EDA, trends, rankings, segmentation
+
+## What I Built (Layer by Layer)
+### Bronze (Staging)
+- DDL for raw tables: CRM customers/products/sales, ERP demographics/location/category (`scripts/bronze/ddl_bronze.sql`)
+- Load from staged files with `INSERT OVERWRITE` (`scripts/bronze/proc_load_bronze.sql`)
+
+### Silver (Cleansed & Conformed)
+
+- Standardization and business rules (`scripts/silver/proc_load_silver.sql`):
+  - Customer: trim names, normalize gender/marital status, deduplicate using `ROW_NUMBER()` on latest create date
+  - Product: derive `cat_id` via `SUBSTRING`/`REPLACE`, fill cost via `COALESCE`, map product line labels, derive `prd_end_dt` with `LEAD()`
+  - Sales: robust date parsing with `TO_DATE` + guards; recompute amounts and prices with `CASE`, `ABS`, `NULLIF`
+  - ERP: normalize IDs, sanitize `BDATE` ranges, unify country names
+- Audit columns: `current_timestamp()` as `dwh_create_date`
+
+### Gold (Star Schema + Reports)
+
+- Views for dimensions and facts (`scripts/gold/proc_load_gold.sql`):
+  - `gold.dim_customers`: CRM enriched with ERP demographics and location, surrogate `ROW_NUMBER()` key
+  - `gold.dim_products`: active products only, joined to ERP categories, surrogate key by start date + product
+  - `gold.fact_sales`: joins Silver sales to dimension surrogate keys
+- Integrity checks (`scripts/gold/integrity_check_gold.sql`): left joins to detect orphaned fact keys
+- Exploration queries for each entity (`exploration_*.sql`)
+- Rich analytics and report views (`data_analysis.sql`): KPIs, trends, cumulative analysis, rankings, segmentation
+
+## SQL Techniques Used (Curated Catalog)
+- **Window functions**: `ROW_NUMBER()`, `LEAD()`, `LAG()`, `SUM() OVER`, `AVG() OVER`
+- **CTEs**: modular analytics and reporting pipelines (`WITH ... AS (...)`)
+- **Conditional logic**: `CASE WHEN`, `COALESCE`, `NULLIF`
+- **String functions**: `TRIM`, `UPPER`, `REPLACE`, `SUBSTRING`, `CONCAT`
+- **Math & validation**: `ABS`, `ROUND`
+- **Date/time**: `TO_DATE`, `DATE_TRUNC`, `DATEDIFF`, `YEAR`, `MONTH`, `GETDATE`, `current_timestamp`
+- **DML & DDL**: `CREATE CATALOG/SCHEMA`, `CREATE TABLE`, `CREATE VIEW`, `DROP TABLE IF EXISTS`, `INSERT OVERWRITE`
+- **Joins**: `LEFT JOIN` for conforming dimensions and building facts
+- **Aggregations**: `SUM`, `AVG`, `COUNT`, `COUNT(DISTINCT)`, `GROUP BY`, `ORDER BY`, `UNION ALL`
+
+## Data Quality & Business Rules (Examples)
+- Normalize gender from multiple encodings to [Male, Female, n/a]
+- Standardize marital status and product line codes to readable labels
+- Deduplicate customers by latest `cst_create_date` per `cst_id`
+- Sanitize invalid dates and negative prices; recompute `sales_amount` when inconsistent
+- Enforce active products (exclude rows with `prd_end_dt IS NOT NULL` in gold dimension)
+- Standardize countries (e.g., US/USA/United States → United States)
