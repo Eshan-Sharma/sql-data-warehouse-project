@@ -89,14 +89,21 @@ Business-ready layer
 # Repository Structure
 
 ```
-sql-version-1.0-implementation/   # Original SQL-based warehouse
+sql-version-1.0-implementation/   # Original SQL-based warehouse (V1.0)
 
 notebooks/                       # Databricks notebooks (Bronze/Silver/Gold)
+  bronze/                        # Raw ingestion (e.g. 01_bronze_ingestion)
+  silver/                        # Cleansed CRM & ERP tables
+  gold/                          # Dimension & fact tables
+orchestration/                   # Orchestration notebooks (e.g. run_silver, run_gold)
 pipelines/                       # Workflow/job definitions
-dashboards/                      # BI & visualization assets
+  databricks_medallion_pipeline_job.yaml
 datasets/                        # Sample source data
-docs/                            # Architecture & documentation
+docs/                            # V2.0 docs: data catalog, naming conventions
+                                # (separate from sql-version-1.0-implementation/docs/)
 ```
+
+You can add a `dashboards/` folder if you want to store BI and visualization assets (e.g. Power BI reports, Databricks dashboards).
 
 # Goals of This Project
 
